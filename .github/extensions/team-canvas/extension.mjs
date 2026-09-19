@@ -92,21 +92,6 @@ function decorateCard(card, columnId) {
     };
 }
 
-function getCardScore(card) {
-    const priorityScore = { High: 30, Medium: 20, Low: 10 };
-    const columnScore = { "in-progress": 15, todo: 10, backlog: 0, done: -100 };
-    return (priorityScore[card.priority] ?? 0) + (columnScore[card.columnId] ?? 0);
-}
-
-function getTriageCards(board) {
-    return board.columns
-        .flatMap((column) => column.cards)
-        .map((card) => decorateCard(card, board.columns.find((column) => column.cards.includes(card))?.id ?? "backlog"))
-        .filter((card) => card.columnId !== "done")
-        .sort((first, second) => getCardScore(second) - getCardScore(first))
-        .slice(0, 3);
-}
-
 function getBoardPath(instanceId) {
     const workspaceRoot = globalThis.__teamCanvasWorkspace
         ?? join(process.cwd(), ".github", "extensions", "team-canvas");
