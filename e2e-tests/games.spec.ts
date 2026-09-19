@@ -24,6 +24,38 @@ test.describe('Game Listing and Navigation', () => {
     });
   });
 
+  test('should filter games by category and publisher', async ({ page }) => {
+    await page.goto('/');
+
+    await test.step('Apply category and publisher filters', async () => {
+      await page.locator('label:has-text("Strategy") input[type="checkbox"]').check();
+      await page.getByTestId('publisher-filter').selectOption({ label: 'CodeForge Studios' });
+      await page.getByTestId('apply-filters-button').click();
+    });
+
+    await test.step('Verify the filtered list only contains matching games', async () => {
+      await expect(page).toHaveURL(/category=.*publisher=/);
+      const visibleGames = page.locator('[data-testid="game-card"]:visible');
+      await expect(visibleGames).toHaveCount(1);
+      await expect(page.getByTestId('games-summary')).toContainText('1 game shown');
+      await expect(visibleGames.first()).toContainText('DevOps Dominion');
+      await expect(visibleGames.first()).toContainText('Strategy');
+      await expect(visibleGames.first()).toContainText('CodeForge Studios');
+    });
+  });
+
+  test('should show an empty state when no games match the form filters', async ({ page }) => {
+    await test.step('Navigate with incompatible filter values', async () => {
+      await page.goto('/?category=999&publisher=999');
+    });
+
+    await test.step('Verify the empty state is shown', async () => {
+      await expect(page.getByTestId('empty-state')).toBeVisible();
+      await expect(page.getByTestId('games-summary')).toContainText('0 games shown');
+      await expect(page.getByTestId('empty-state-text')).toContainText('No games match the selected filters.');
+    });
+  });
+
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
     let gameId: string | null;
     let gameTitle: string | null;
