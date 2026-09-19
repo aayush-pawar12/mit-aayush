@@ -182,7 +182,7 @@ test.describe('Accessibility Tests', () => {
     
     // Filter for color contrast violations
     const contrastViolations = accessibilityScanResults.violations.filter(
-      violation => violation.id === 'color-contrast'
+      (violation) => violation.id === 'color-contrast',
     );
     
     expect(contrastViolations).toEqual([]);

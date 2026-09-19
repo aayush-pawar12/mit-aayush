@@ -51,6 +51,14 @@ export async function getAllGameIds(db: Database): Promise<number[]> {
 }
 ```
 
+- Every exported function in `db/` and `src/lib/` must have a TSDoc/JSDoc comment.
+  Describe the function's purpose, every parameter with `@param`, and its return
+  value with `@returns`. For injectable helpers, document that the `db`
+  parameter is supplied by the caller so production code and tests can use
+  different database instances.
+- Keep documentation focused on intent, invariants, and non-obvious decisions.
+  Do not add comments that merely restate a function name, type annotation, or
+  expression. Update or remove comments when the related implementation changes.
 - Always `order by` a stable column (title) so static builds are deterministic.
 - Map raw rows to the app-facing `Game`/`Publisher`/`Category` types in one place; don't leak Drizzle row shapes into components.
 - Keep ordering/lookup logic in `games.ts`, not in pages.
@@ -70,3 +78,15 @@ Node.js 22.13 or later is required because the data layer uses the built-in `nod
 ## Type checking
 
 The data layer (`db/**/*.ts`, `src/lib/*.ts`) is type-checked by `npm run typecheck`, which runs the native **TypeScript 7** compiler (`tsgo`, from `@typescript/native-preview`) against `tsconfig.tsgo.json`. Keep helpers exported with explicit parameter and return types so `tsgo` can verify them. Linting is unaffected — ESLint + `typescript-eslint` still run on the classic `typescript` package.
+
+## TypeScript style and comments
+
+- Use single quotes, semicolons, trailing commas in multiline literals, and
+  braces for multiline control-flow statements.
+- Prefer explicit parameter and return types for exported functions, narrow
+  types over casts, and `const` unless reassignment is required.
+- Use `//` comments for a short local rationale and TSDoc/JSDoc for exported
+  APIs. Comments should explain *why* code exists or a decision was made, not
+  *what* the following line already says.
+- These style rules are checked by ESLint where practical. Run `npm run lint`
+  through the `quality-checks` skill before submitting changes.

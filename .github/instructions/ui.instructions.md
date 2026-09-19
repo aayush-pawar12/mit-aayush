@@ -49,7 +49,17 @@ Refer to technology-specific instruction files:
 - Create reusable components for common UI patterns
 - Keep components focused on a single responsibility
 - Use props for configuration, not duplication
-- Document component APIs with TypeScript types
+- Document component APIs with a typed `Props` interface and a short TSDoc
+  description of the component's public contract
+
+## Comment and documentation philosophy
+
+- Explain *why*: use comments for intent, trade-offs, invariants, and
+  non-obvious accessibility or interaction decisions.
+- Do not explain *what* the code already makes clear. Delete comments that only
+  paraphrase a tag, variable, condition, or function call.
+- Keep comments current. A stale comment is a correctness bug and must be
+  updated or removed when the related code changes.
 
 ## Development Workflow
 
